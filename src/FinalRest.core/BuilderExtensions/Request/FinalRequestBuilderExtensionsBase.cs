@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FinalRest.core
@@ -13,6 +7,11 @@ namespace FinalRest.core
     public static class FinalRequestBuilderExtensionsBase
     {
 
+        /// <summary>
+        /// Copies the current Request Builder to enable the possibility for creating base builders
+        /// </summary>
+        /// <param name="self">The Builder as extended Method</param>
+        /// <returns>The Builder for chaining methods</returns>
         public static FinalRestRequestBuilder Copy(this FinalRestRequestBuilder self)
         {
             var builder = new FinalRestRequestBuilder
@@ -33,18 +32,34 @@ namespace FinalRest.core
         }
 
         #region setter
+        /// <summary>
+        /// Sets the route to the called endpoint
+        /// </summary>
+        /// <param name="self">The Builder as extended Method</param>
+        /// <param name="route">The Route to the called Endpoint</param>
+        /// <returns>The Builder for chaining methods</returns>
         public static FinalRestRequestBuilder SetRoute(this FinalRestRequestBuilder self, string route)
         {
             self.Route = route;
             return self;
         }
-
+        /// <summary>
+        /// Sets the Rest Method used for this request
+        /// </summary>
+        /// <param name="self">The Builder as extended Method</param>
+        /// <param name="method">The Rest Method used for this Request</param>
+        /// <returns>The Builder for chaining methods</returns>
         public static FinalRestRequestBuilder SetMethod(this FinalRestRequestBuilder self, ERestMethod method)
         {
             self.Method = method;
             return self;
         }
-
+        /// <summary>
+        /// Sets the used Content-Type of a post request
+        /// </summary>
+        /// <param name="self">The Builder as extended Method</param>
+        /// <param name="bodyType">The used Content-Type</param>
+        /// <returns>The Builder for chaining methods</returns>
         public static FinalRestRequestBuilder SetRequestBodyType(this FinalRestRequestBuilder self, EBodyType bodyType)
         {
             self.BodyType = bodyType;
@@ -53,6 +68,13 @@ namespace FinalRest.core
         #endregion
 
         #region header
+        /// <summary>
+        /// Adds a custom header to this request
+        /// </summary>
+        /// <param name="self">The Builder as extended Method</param>
+        /// <param name="key">The header name</param>
+        /// <param name="value">The header value</param>
+        /// <returns>The Builder for chaining methods</returns>
         public static FinalRestRequestBuilder AddHeader(this FinalRestRequestBuilder self, string key, string value)
         {
             self.Headers.Add(key, value);
@@ -61,6 +83,12 @@ namespace FinalRest.core
         #endregion
 
         #region request handler
+        /// <summary>
+        /// Adds a handler that will be invoked before the request is made
+        /// </summary>
+        /// <typeparam name="TPreRequestHandler">A Type that implements IPreRequestHandler</typeparam>
+        /// <param name="self">The Builder as extended Method</param>
+        /// <returns>The Builder for chaining methods</returns>
         public static FinalRestRequestBuilder AddPreRequestHandler<TPreRequestHandler>(this FinalRestRequestBuilder self)
             where TPreRequestHandler : IPreRequestHandler, new()
         {
@@ -71,6 +99,12 @@ namespace FinalRest.core
             self.PreRequestHandler.Add(typeof(TPreRequestHandler));
             return self;
         }
+        /// <summary>
+        /// Adds a handler that will be invoked after the request is made
+        /// </summary>
+        /// <typeparam name="TPostRequestHandler">A Type that implements IPostRequestHandler</typeparam>
+        /// <param name="self">The Builder as extended Method</param>
+        /// <returns>The Builder for chaining methods</returns>
         public static FinalRestRequestBuilder AddPostRequestHandler<TPostRequestHandler>(this FinalRestRequestBuilder self)
             where TPostRequestHandler : IPostRequestHandler, new()
         {
@@ -84,6 +118,14 @@ namespace FinalRest.core
         #endregion
 
         #region response
+        /// <summary>
+        /// Adds a async behaviour that will be invoked on a certain StatusCode
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result of this request</typeparam>
+        /// <param name="self">The Builder as extended Method</param>
+        /// <param name="statusCode">The StatusCode on wich the behaviour should be invoked</param>
+        /// <param name="behaviour">The Behaviour Task that will be invoked</param>
+        /// <returns>The Builder for chaining methods</returns>
         public static FinalRestRequestBuilder AddAsyncResultBehaviour<TResult>(this FinalRestRequestBuilder self, HttpStatusCode statusCode, Func<HttpStatusCode, TResult, Task> behaviour)
             where TResult : class
         {
@@ -91,11 +133,26 @@ namespace FinalRest.core
             self.AsyncResultBehaviours.Add((statusCode, convertedFunction));
             return self;
         }
+        /// <summary>
+        /// Adds a async behaviour that will be invoked on a certain StatusCode
+        /// </summary>
+        /// <param name="self">The Builder as extended Method</param>
+        /// <param name="statusCode">The StatusCode on wich the behaviour should be invoked</param>
+        /// <param name="behaviour">The Behaviour Task that will be invoked</param>
+        /// <returns>The Builder for chaining methods</returns>
         public static FinalRestRequestBuilder AddAsyncResponseBehaviour(this FinalRestRequestBuilder self, HttpStatusCode statusCode, Func<HttpStatusCode, Task> behaviour)
         {
             self.AsyncResponseBehaviour.Add((statusCode, behaviour));
             return self;
         }
+        /// <summary>
+        /// Adds a behaviour that will be invoked on a certain StatusCode
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result of this request</typeparam>
+        /// <param name="self">The Builder as extended Method</param>
+        /// <param name="statusCode">The StatusCode on wich the behaviour should be invoked</param>
+        /// <param name="behaviour">The Behaviour Method that will be invoked</param>
+        /// <returns>The Builder for chaining methods</returns>
         public static FinalRestRequestBuilder AddResultBehaviour<TResult>(this FinalRestRequestBuilder self, HttpStatusCode statusCode, Action<HttpStatusCode, TResult> behaviour)
             where TResult : class
         {
@@ -103,12 +160,18 @@ namespace FinalRest.core
             self.ResultBehaviours.Add((statusCode, convertedAction));
             return self;
         }
+        /// <summary>
+        /// Adds a behaviour that will be invoked on a certain StatusCode
+        /// </summary>
+        /// <param name="self">The Builder as extended Method</param>
+        /// <param name="statusCode">The StatusCode on wich the behaviour should be invoked</param>
+        /// <param name="behaviour">The Behaviour Method that will be invoked</param>
+        /// <returns>The Builder for chaining methods</returns>
         public static FinalRestRequestBuilder AddResponseBehaviour(this FinalRestRequestBuilder self, HttpStatusCode statusCode, Action<HttpStatusCode> behaviour)
         {
             self.ResponseBehaviours.Add((statusCode, behaviour));
             return self;
         }
-
         #endregion
 
 

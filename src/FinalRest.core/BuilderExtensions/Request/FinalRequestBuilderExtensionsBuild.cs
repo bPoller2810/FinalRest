@@ -9,13 +9,14 @@ namespace FinalRest.core
     public static class FinalRequestBuilderExtensionsBuild
     {
 
+        /// <summary>
+        /// This Creates a FinalRestRequest
+        /// </summary>
+        /// <param name="self">The Builder as extended Method</param>
+        /// <returns>A FinalRestRequest that represents the configuration of this Builder</returns>
         public static IRestRequest Build(this FinalRestRequestBuilder self)
         {
             #region validation
-            if (self.Method == ERestMethod.Default)
-            {
-                throw new InvalidOperationException("You must set a Method");
-            }
             if (string.IsNullOrWhiteSpace(self.Route))
             {
                 throw new InvalidOperationException("You must set a Route");
@@ -24,17 +25,17 @@ namespace FinalRest.core
 
             return new FinalRestRequest
             {
-                Method = self.Method,
+                Method = self.Method != ERestMethod.Default ? self.Method : ERestMethod.GET,
                 Route = self.Route,
-                BodyType = self.BodyType,
+                BodyType = self.BodyType != EBodyType.DEFAULT ? self.BodyType : EBodyType.JSON,
                 Headers = GetHeaders(self.Headers),
-                
+
                 PreRequestHandler = GetPreRequestHandlerInstances(self.PreRequestHandler),
                 PostRequestHandler = GetPostRequestHandlerInstances(self.PostRequestHandler),
-                
+
                 AsyncResultBehaviours = GetAsyncResultBehaviourDefinitions(self.AsyncResultBehaviours),
                 AsyncResponseBehaviours = GetAsyncResponseBehaviourDefinitions(self.AsyncResponseBehaviour),
-               
+
                 ResultBehaviours = GetResultBehaviourDefinitions(self.ResultBehaviours),
                 ResponseBehaviours = GetResponseBehaviourDefinitions(self.ResponseBehaviours)
             };
