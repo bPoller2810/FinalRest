@@ -16,18 +16,14 @@ namespace FinalRest.core
             if (self.Requests.Count == 0)
             {
                 throw new InvalidOperationException("You need at least 1 Request");
-            }
-            if (self.HttpClientFactory is null)
-            {
-                throw new InvalidOperationException("You must specify a HttpClient type");
-            }
+            }            
             #endregion
 
             return new FinalRestClient<TInvocationKey>
             {
                 BaseUrl = self.BaseUrl,
                 Requests = new ReadOnlyDictionary<TInvocationKey, IRestRequest>(self.Requests),
-                HttpClientFactory = self.HttpClientFactory,
+                HttpClientFactory = self.HttpClientFactory is not null ? self.HttpClientFactory : () => new DefaultHttpClient(),
                 CustomCertificateValidation = self.CustomCertificateValidation,
             };
         }
