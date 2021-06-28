@@ -28,10 +28,15 @@ namespace FinalRest.core
                 Route = self.Route,
                 BodyType = self.BodyType,
                 Headers = GetHeaders(self.Headers),
+                
                 PreRequestHandler = GetPreRequestHandlerInstances(self.PreRequestHandler),
                 PostRequestHandler = GetPostRequestHandlerInstances(self.PostRequestHandler),
-                AsyncResponseBehaviours = GetAsyncResponseBehaviourDefinitions(self.AsyncResponseBehaviours),
-                ResponeBehaviours = GetResponseBehaviourDefinitions(self.ResponseBehaviours),
+                
+                AsyncResultBehaviours = GetAsyncResultBehaviourDefinitions(self.AsyncResultBehaviours),
+                AsyncResponseBehaviours = GetAsyncResponseBehaviourDefinitions(self.AsyncResponseBehaviour),
+               
+                ResultBehaviours = GetResultBehaviourDefinitions(self.ResultBehaviours),
+                ResponseBehaviours = GetResponseBehaviourDefinitions(self.ResponseBehaviours)
             };
         }
 
@@ -58,7 +63,17 @@ namespace FinalRest.core
                 .ToArray();
         }
 
-        private static AsyncResponseBehaviourDefinition[] GetAsyncResponseBehaviourDefinitions(IEnumerable<(HttpStatusCode StatusCode, Func<HttpStatusCode, object, Task> Behaviour)> behaviours)
+        private static AsyncResultBehaviourDefinition[] GetAsyncResultBehaviourDefinitions(IEnumerable<(HttpStatusCode StatusCode, Func<HttpStatusCode, object, Task> Behaviour)> behaviours)
+        {
+            return behaviours
+                .Select(a => new AsyncResultBehaviourDefinition
+                {
+                    StatusCode = a.StatusCode,
+                    Behaviour = a.Behaviour,
+                })
+                .ToArray();
+        }
+        private static AsyncResponseBehaviourDefinition[] GetAsyncResponseBehaviourDefinitions(IEnumerable<(HttpStatusCode StatusCode, Func<HttpStatusCode, Task> Behaviour)> behaviours)
         {
             return behaviours
                 .Select(a => new AsyncResponseBehaviourDefinition
@@ -68,7 +83,17 @@ namespace FinalRest.core
                 })
                 .ToArray();
         }
-        private static ResponseBehaviourDefinition[] GetResponseBehaviourDefinitions(IEnumerable<(HttpStatusCode StatusCode, Action<HttpStatusCode, object> Behaviour)> behaviour)
+        private static ResultBehaviourDefinition[] GetResultBehaviourDefinitions(IEnumerable<(HttpStatusCode StatusCode, Action<HttpStatusCode, object> Behaviour)> behaviour)
+        {
+            return behaviour
+                .Select(r => new ResultBehaviourDefinition
+                {
+                    StatusCode = r.StatusCode,
+                    Behaviour = r.Behaviour,
+                })
+                .ToArray();
+        }
+        private static ResponseBehaviourDefinition[] GetResponseBehaviourDefinitions(IEnumerable<(HttpStatusCode StatusCode, Action<HttpStatusCode> Behaviour)> behaviour)
         {
             return behaviour
                 .Select(r => new ResponseBehaviourDefinition

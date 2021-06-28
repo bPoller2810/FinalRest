@@ -14,9 +14,11 @@
 
         public IPostRequestHandler[] PostRequestHandler { get; internal set; }
 
-        public AsyncResponseBehaviourDefinition[] AsyncResponseBehaviours { get; internal set; }
+        public AsyncResultBehaviourDefinition[] AsyncResultBehaviours { get; internal set; }
+        public AsyncResponseBehaviourDefinition[] AsyncResponseBehaviours { get;internal set; }
 
-        public ResponseBehaviourDefinition[] ResponeBehaviours { get; internal set; }
+        public ResultBehaviourDefinition[] ResultBehaviours { get; internal set; }
+        public ResponseBehaviourDefinition[] ResponseBehaviours { get; internal set; }
 
 
         public IRestRequest Copy()
@@ -26,10 +28,16 @@
                 Method = Method,
                 Route = Route,
                 BodyType = BodyType,
+
                 PreRequestHandler = PreRequestHandler,
                 PostRequestHandler = PostRequestHandler,
+
+                AsyncResultBehaviours = AsyncResultBehaviours,
                 AsyncResponseBehaviours = AsyncResponseBehaviours,
-                ResponeBehaviours = ResponeBehaviours,
+
+                ResultBehaviours = ResultBehaviours,
+                ResponseBehaviours = ResponseBehaviours,
+                
                 Headers = Headers.Copy(),
             };
         }

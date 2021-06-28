@@ -16,9 +16,11 @@ namespace FinalRest.sample.console
         {
             #region requests
             var baseRequest = new FinalRestRequestBuilder()
-               .AddAsyncResponseBehaviour<ApiResult>(HttpStatusCode.Unauthorized, (status, data) => Nav.HandleAuthFailAsync($"damn {status} => {data.Info.Version}"))
-               .AddResponseBehaviour<ApiResult>(HttpStatusCode.InternalServerError, (status, data) => Dialog.ShowErrorDialog(data.Info.Seed))
-               .AddResponseBehaviour<ApiResult>(HttpStatusCode.OK, (status, data) => Dialog.ShowErrorDialog(data.Info.Seed));
+                .AddAsyncResponseBehaviour(HttpStatusCode.OK, (status) => Task.Factory.StartNew(() => Debug.WriteLine(status.ToString())))
+                .AddResponseBehaviour(HttpStatusCode.OK, (status)=> Debug.WriteLine($"Sync: {status}"))
+                .AddAsyncResultBehaviour<ApiResult>(HttpStatusCode.Unauthorized, (status, data) => Nav.HandleAuthFailAsync($"damn {status} => {data.Info.Version}"))
+                .AddResultBehaviour<ApiResult>(HttpStatusCode.InternalServerError, (status, data) => Dialog.ShowErrorDialog(data.Info.Seed))
+                .AddResultBehaviour<ApiResult>(HttpStatusCode.OK, (status, data) => Dialog.ShowErrorDialog(data.Info.Seed));
 
             var randomUsers = baseRequest
                 .Copy()

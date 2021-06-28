@@ -24,7 +24,9 @@ namespace FinalRest.core
             builder.PreRequestHandler.AddRange(self.PreRequestHandler);
             builder.PostRequestHandler.AddRange(self.PostRequestHandler);
 
-            builder.AsyncResponseBehaviours.AddRange(self.AsyncResponseBehaviours);
+            builder.AsyncResultBehaviours.AddRange(self.AsyncResultBehaviours);
+            builder.AsyncResponseBehaviour.AddRange(self.AsyncResponseBehaviour);
+            builder.ResultBehaviours.AddRange(self.ResultBehaviours);
             builder.ResponseBehaviours.AddRange(self.ResponseBehaviours);
 
             return builder;
@@ -82,20 +84,31 @@ namespace FinalRest.core
         #endregion
 
         #region response
-        public static FinalRestRequestBuilder AddAsyncResponseBehaviour<TResult>(this FinalRestRequestBuilder self, HttpStatusCode statusCode, Func<HttpStatusCode, TResult, Task> behaviour)
+        public static FinalRestRequestBuilder AddAsyncResultBehaviour<TResult>(this FinalRestRequestBuilder self, HttpStatusCode statusCode, Func<HttpStatusCode, TResult, Task> behaviour)
             where TResult : class
         {
             var convertedFunction = new Func<HttpStatusCode, object, Task>((status, data) => behaviour.Invoke(status, (TResult)data));
-            self.AsyncResponseBehaviours.Add((statusCode, convertedFunction));
+            self.AsyncResultBehaviours.Add((statusCode, convertedFunction));
             return self;
         }
-        public static FinalRestRequestBuilder AddResponseBehaviour<TResult>(this FinalRestRequestBuilder self, HttpStatusCode statusCode, Action<HttpStatusCode, TResult> behaviour)
+        public static FinalRestRequestBuilder AddAsyncResponseBehaviour(this FinalRestRequestBuilder self, HttpStatusCode statusCode, Func<HttpStatusCode, Task> behaviour)
+        {
+            self.AsyncResponseBehaviour.Add((statusCode, behaviour));
+            return self;
+        }
+        public static FinalRestRequestBuilder AddResultBehaviour<TResult>(this FinalRestRequestBuilder self, HttpStatusCode statusCode, Action<HttpStatusCode, TResult> behaviour)
             where TResult : class
         {
             var convertedAction = new Action<HttpStatusCode, object>((statusCode, data) => behaviour.Invoke(statusCode, (TResult)data));
-            self.ResponseBehaviours.Add((statusCode, convertedAction));
+            self.ResultBehaviours.Add((statusCode, convertedAction));
             return self;
         }
+        public static FinalRestRequestBuilder AddResponseBehaviour(this FinalRestRequestBuilder self, HttpStatusCode statusCode, Action<HttpStatusCode> behaviour)
+        {
+            self.ResponseBehaviours.Add((statusCode, behaviour));
+            return self;
+        }
+
         #endregion
 
 

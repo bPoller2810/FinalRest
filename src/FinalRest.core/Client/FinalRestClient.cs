@@ -27,8 +27,8 @@ namespace FinalRest.core
             var response = await ExecuteRequestAsync<TResult>(request, body, urlParameters);
             HandlePostRequests<TResult>(request.PostRequestHandler, response);
 
-            HandleSyncBehaviours<TResult>(request.ResponeBehaviours, response);
-            await HandleAsyncBehaviours<TResult>(request.AsyncResponseBehaviours, response);
+            HandleSyncBehaviours<TResult>(request.ResponseBehaviours, request.ResultBehaviours, response);
+            await HandleAsyncBehaviours<TResult>(request.AsyncResponseBehaviours, request.AsyncResultBehaviours, response);
 
             return response.Data as TResult;
         }
@@ -60,18 +60,26 @@ namespace FinalRest.core
                 postRequestHandler.HandlePostRequest(response.StatusCode, response.Data as TResult);
             }
         }
-        private void HandleSyncBehaviours<TResult>(ResponseBehaviourDefinition[] behaviours, IRestResponse response)
+        private void HandleSyncBehaviours<TResult>(ResponseBehaviourDefinition[] responseBehaviours, ResultBehaviourDefinition[] resultBehaviours, IRestResponse response)
             where TResult : class
         {
-            foreach (var syncBehaviour in behaviours.Where(b => b.StatusCode == response.StatusCode))
+            foreach (var syncBehaviour in responseBehaviours.Where(b => b.StatusCode == response.StatusCode))
+            {
+                syncBehaviour.Behaviour(response.StatusCode);
+            }
+            foreach (var syncBehaviour in resultBehaviours.Where(b => b.StatusCode == response.StatusCode))
             {
                 syncBehaviour.Behaviour(response.StatusCode, response.Data as TResult);
             }
         }
-        private async Task HandleAsyncBehaviours<TResult>(AsyncResponseBehaviourDefinition[] behaviours, IRestResponse response)
+        private async Task HandleAsyncBehaviours<TResult>(AsyncResponseBehaviourDefinition[] responseBehaviours, AsyncResultBehaviourDefinition[] resultBehaviours, IRestResponse response)
             where TResult : class
         {
-            foreach (var syncBehaviour in behaviours.Where(b => b.StatusCode == response.StatusCode))
+            foreach (var syncBehaviour in responseBehaviours.Where(b => b.StatusCode == response.StatusCode))
+            {
+                await syncBehaviour.Behaviour(response.StatusCode);
+            }
+            foreach (var syncBehaviour in resultBehaviours.Where(b => b.StatusCode == response.StatusCode))
             {
                 await syncBehaviour.Behaviour(response.StatusCode, response.Data as TResult);
             }

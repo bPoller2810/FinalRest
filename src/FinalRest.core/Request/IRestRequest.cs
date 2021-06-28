@@ -14,8 +14,10 @@ namespace FinalRest.core
         IPreRequestHandler[] PreRequestHandler { get; }
         IPostRequestHandler[] PostRequestHandler { get; }
 
+        AsyncResultBehaviourDefinition[] AsyncResultBehaviours { get; }
         AsyncResponseBehaviourDefinition[] AsyncResponseBehaviours { get; }
-        ResponseBehaviourDefinition[] ResponeBehaviours { get; }
+        ResultBehaviourDefinition[] ResultBehaviours { get; }
+        ResponseBehaviourDefinition[] ResponseBehaviours { get; }
 
 
         IRestRequest Copy();

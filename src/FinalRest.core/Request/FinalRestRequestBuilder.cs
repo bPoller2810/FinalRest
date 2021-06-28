@@ -20,8 +20,12 @@ namespace FinalRest.core
         internal List<Type> PreRequestHandler { get; } = new();
         internal List<Type> PostRequestHandler { get; } = new();
 
-        internal List<(HttpStatusCode StatusCode, Func<HttpStatusCode, object, Task> Behaviour)> AsyncResponseBehaviours { get; } = new();
-        internal List<(HttpStatusCode StatusCode, Action<HttpStatusCode, object> Behaviour)> ResponseBehaviours { get; } = new();
-
+        #region behaviours
+        internal List<(HttpStatusCode StatusCode, Func<HttpStatusCode, object, Task> Behaviour)> AsyncResultBehaviours { get; } = new();
+        internal List<(HttpStatusCode StatusCode, Func<HttpStatusCode, Task> Behaviour)> AsyncResponseBehaviour { get; } = new();
+        
+        internal List<(HttpStatusCode StatusCode, Action<HttpStatusCode, object> Behaviour)> ResultBehaviours { get; } = new();
+        internal List<(HttpStatusCode StatusCode, Action<HttpStatusCode> Behaviour)> ResponseBehaviours { get; } = new();
+        #endregion
     }
 }
