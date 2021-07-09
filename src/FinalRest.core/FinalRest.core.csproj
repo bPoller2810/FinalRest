@@ -3,6 +3,13 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>9.0</LangVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Bernhard Pollerspöck</Authors>
+    <Description>A declarative way to define REST Api Requests and full clients without the need to code</Description>
+    <Copyright>MIT</Copyright>
+    <PackageProjectUrl>https://github.com/bPoller2810/FinalRest</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/bPoller2810/FinalRest</RepositoryUrl>
+    <PackageTags>c# rest post get put delete api</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
