@@ -1,6 +1,5 @@
 ﻿using BasicMvvm.Models.RandomUserApi;
 using FinalRest.core;
-using System;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
@@ -43,66 +42,11 @@ namespace FinalRest.sample.console
 
             var users = await client.InvokeAsync<ApiResult>(ERequests.RandomUsers, null, "inc=id,gender,name,email", "results=10");
 
-            //TODO: non generic behaviours (dont respond with the object)
-
-
         }
 
         private static bool ValidateCert(HttpRequestMessage msg, X509Certificate2 cert, X509Chain chain, SslPolicyErrors errors)
         {
             return true;
         }
-    }
-
-    public record AuthDto(string Username, string Password);
-
-    partial class MyCustomClient
-    {
-        public bool IsCool { get; set; }
-    }
-
-
-    public class Nav
-    {
-        public static Task HandleAuthFailAsync(string response)
-        {
-            Debug.WriteLine($"Auth failes with: {response}");
-            return Task.CompletedTask;
-        }
-    }
-    public class Dialog
-    {
-        public static void ShowErrorDialog(string error)
-        {
-            Console.WriteLine(error);
-        }
-    }
-
-    public class CustomJwtAuthHandler : IPreRequestHandler, IPostRequestHandler
-    {
-        public void HandlePostRequest<TDataType>(HttpStatusCode statusCode, TDataType data)
-        {
-            Debug.WriteLine($"Post Handling {statusCode} for {data?.GetType().Name}");
-        }
-
-        public void HandlePreRequest(FinalRestHeaderCollection headers)
-        {
-            headers.Add("JWT", "some Token");
-        }
-    }
-
-    public class SessionResultDto
-    {
-        public string Token { get; set; }
-    }
-    public class DataDto
-    {
-        public string Data { get; set; }
-    }
-
-
-    public enum ERequests
-    {
-        Auth, Other, DataGet, RandomUsers,
     }
 }
