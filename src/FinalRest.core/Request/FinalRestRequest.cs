@@ -1,8 +1,12 @@
-﻿namespace FinalRest.core
+﻿using System.Text;
+
+namespace FinalRest.core
 {
     public sealed class FinalRestRequest : IRestRequest
     {
         public ERestMethod Method { get; internal set; }
+        public Encoding Encoding { get; internal set; }
+        public string MediaType { get; internal set; }
 
         public string Route { get; internal set; }
 
@@ -26,6 +30,8 @@
             return new FinalRestRequest
             {
                 Method = Method,
+                Encoding = Encoding,
+                MediaType = MediaType,
                 Route = Route,
                 BodyType = BodyType,
 

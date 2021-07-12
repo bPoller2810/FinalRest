@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FinalRest.core
@@ -49,11 +50,14 @@ namespace FinalRest.core
         /// <param name="self">The Builder as extended Method</param>
         /// <param name="method">The Rest Method used for this Request</param>
         /// <returns>The Builder for chaining methods</returns>
-        public static FinalRestRequestBuilder SetMethod(this FinalRestRequestBuilder self, ERestMethod method)
+        public static FinalRestRequestBuilder SetMethod(this FinalRestRequestBuilder self, ERestMethod method, Encoding encoding = null, string mediaType = null)
         {
             self.Method = method;
+            self.Encoding = encoding;
+            self.MediaType = mediaType;
             return self;
         }
+
         /// <summary>
         /// Sets the used Content-Type of a post request
         /// </summary>

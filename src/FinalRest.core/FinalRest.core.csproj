@@ -10,7 +10,7 @@
     <PackageProjectUrl>https://github.com/bPoller2810/FinalRest</PackageProjectUrl>
     <RepositoryUrl>https://github.com/bPoller2810/FinalRest</RepositoryUrl>
     <PackageTags>c# rest post get put delete api</PackageTags>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
