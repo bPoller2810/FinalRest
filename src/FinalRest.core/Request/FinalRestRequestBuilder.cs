@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FinalRest.core
@@ -14,6 +15,16 @@ namespace FinalRest.core
         /// On Build this will default to ERestMethod.GET if not set
         /// </summary>
         internal ERestMethod Method { get; set; }
+
+        /// <summary>
+        /// The encoding used for StringContent bodies
+        /// </summary>
+        internal Encoding Encoding { get; set; }
+
+        /// <summary>
+        /// The MediaType for StringContent bodies
+        /// </summary>
+        internal string MediaType { get; set; }
 
         /// <summary>
         /// The Route to the called Endpoint

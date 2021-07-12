@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FinalRest.core
@@ -26,6 +27,8 @@ namespace FinalRest.core
             return new FinalRestRequest
             {
                 Method = self.Method != ERestMethod.Default ? self.Method : ERestMethod.GET,
+                Encoding = self.Encoding ?? Encoding.UTF8,
+                MediaType = self.MediaType ?? "application/json",
                 Route = self.Route,
                 BodyType = self.BodyType != EBodyType.DEFAULT ? self.BodyType : EBodyType.JSON,
                 Headers = GetHeaders(self.Headers),

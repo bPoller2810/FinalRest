@@ -79,7 +79,7 @@ namespace FinalRest.core
             {
                 if (body is not null)
                 {
-                    content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+                    content = new StringContent(JsonSerializer.Serialize(body), request.Encoding, request.MediaType);
                 }
 
                 var result = await _httpClient.PostAsync(string.Concat(request.Route, urlParam), content);
@@ -103,7 +103,7 @@ namespace FinalRest.core
             {
                 if (body is not null)
                 {
-                    content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+                    content = new StringContent(JsonSerializer.Serialize(body), request.Encoding, request.MediaType);
                 }
 
                 var result = await _httpClient.PutAsync(string.Concat(request.Route, urlParam), content);
