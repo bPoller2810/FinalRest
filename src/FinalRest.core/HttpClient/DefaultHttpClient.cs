@@ -1,12 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace FinalRest.core
@@ -79,7 +76,7 @@ namespace FinalRest.core
             {
                 if (body is not null)
                 {
-                    content = new StringContent(JsonSerializer.Serialize(body), request.Encoding, request.MediaType);
+                    content = new StringContent(JsonConvert.SerializeObject(body), request.Encoding, request.MediaType);
                 }
 
                 var result = await _httpClient.PostAsync(string.Concat(request.Route, urlParam), content);
@@ -103,7 +100,7 @@ namespace FinalRest.core
             {
                 if (body is not null)
                 {
-                    content = new StringContent(JsonSerializer.Serialize(body), request.Encoding, request.MediaType);
+                    content = new StringContent(JsonConvert.SerializeObject(body), request.Encoding, request.MediaType);
                 }
 
                 var result = await _httpClient.PutAsync(string.Concat(request.Route, urlParam), content);
