@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -78,7 +79,7 @@ namespace FinalRest.core
             {
                 if (body is not null)
                 {
-                    content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
+                    content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
                 }
 
                 var result = await _httpClient.PostAsync(string.Concat(request.Route, urlParam), content);
@@ -102,7 +103,7 @@ namespace FinalRest.core
             {
                 if (body is not null)
                 {
-                    content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
+                    content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
                 }
 
                 var result = await _httpClient.PutAsync(string.Concat(request.Route, urlParam), content);
@@ -160,9 +161,9 @@ namespace FinalRest.core
             try
             {
                 var json = await message.Content.ReadAsStringAsync();
-                var data = JsonSerializer.Deserialize<TResult>(json, new JsonSerializerOptions
+                var data = JsonConvert.DeserializeObject<TResult>(json, new JsonSerializerSettings
                 {
-                    PropertyNameCaseInsensitive = true,
+                    MissingMemberHandling = MissingMemberHandling.Error,
                 });
 
                 return new FinalRestResponse
