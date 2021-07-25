@@ -52,7 +52,7 @@ namespace FinalRest.core
         private async Task<IRestResponse> InvokeGetAsync<TResult>(IRestRequest request, params string[] urlParameters)
             where TResult : class
         {
-            var urlParam = urlParameters.Length != 0 ? $"?{string.Join("&", urlParameters)}" : string.Empty;
+            var urlParam = urlParameters.Length != 0 ? string.Join("/", urlParameters) : string.Empty;
             try
             {
                 var result = await _httpClient.GetAsync(string.Concat(request.Route, urlParam));
